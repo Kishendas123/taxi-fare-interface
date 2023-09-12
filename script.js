@@ -1,4 +1,4 @@
-let taxiFareApiUrl = 'https://taxifare.lewagon.ai/predict?pickup_datetime=2012-10-06%2012:10:20&pickup_longitude=40.7614327&pickup_latitude=-73.9798156&dropoff_longitude=40.6513111&dropoff_latitude=-73.8803331&passenger_count=2'; // replace with your API endpoint
+let taxiFareApiUrl = 'https://taxifare-iplbzutoka-ew.a.run.app/predict'; // replace with your API endpoint
 const centralCoordinates = [-74.00597, 40.71427]; // starting position [lng, lat]
 
 if (window.location.href.includes('https://taxifare.lewagon.com')) {
@@ -198,20 +198,19 @@ const predict = () => {
         query.push(`${param}=${data[param]}`)
       })
       const querystring = query.join('&')
-      const url = `${taxiFareApiUrl}`
+      const url = `${taxiFareApiUrl}?${querystring}`
 
       fetch(url, {
         method: 'GET',
         mode: 'no-cors',
         headers:{
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'http://localhost:5001/'
+          'Content-Type': 'application/json'
         }
       })
       .then(response => {
-        //if (!response.ok) {
-          //throw new Error('Network response was not ok');
-        //}
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
         try {
           return response.json();
         } catch (error) {
@@ -223,32 +222,13 @@ const predict = () => {
         console.log(data);
         document.getElementById('fare').classList.remove('d-none');
         const fareResult = document.getElementById('predicted-fare');
-        const fare = Math.round(data['fare'] * 100) / 100
+        const fare = Math.round(data['fare_amount'] * 100) / 100
         fareResult.innerText = `$${fare}`;
       })
       .catch(error => {
         console.error('Error:', error);
       });
 
-/*
-      fetch(url, {
-        method: 'GET',
-        mode: 'no-cors',
-        headers:{
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => response.json)
-      .then(data => {
-        document.getElementById('fare').classList.remove('d-none');
-        const fareResult = document.getElementById('predicted-fare');
-        const fare = Math.round(data['fare_amount'] * 100) / 100
-        fareResult.innerText = `$${fare}`;
-      })
-      .catch((error) => {
-       console.error('Error:', error);
-      });
-      */
     });
   }
 };
