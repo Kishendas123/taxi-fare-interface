@@ -201,10 +201,7 @@ const predict = () => {
       const url = `${taxiFareApiUrl}?${querystring}`
       fetch(url, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        }
+        mode: 'no-cors'
       })
       .then(response => response.json())
       .then(data => {
